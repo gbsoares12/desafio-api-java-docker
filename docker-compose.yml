@@ -1,0 +1,105 @@
+version: '3.1'
+
+services:
+  app:
+    container_name: desafionetprecision
+    image: desafionetprecision
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresqldb
+    networks:
+      - postgres-compose-network
+
+  postgresqldb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=desafioNetprecision
+    networks:
+      - postgres-compose-network
+
+  pgadmin-compose:
+    image: dpage/pgadmin4:4.28
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres@email.com"
+      PGADMIN_DEFAULT_PASSWORD: "postgres"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgresqldb
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
+
+# services:
+#   app:
+#     image: 'docker-spring-boot-postgres:latest'
+#     build:
+#       context: .
+#     container_name: app
+#     depends_on:
+#       - db
+#     environment:
+#       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+#       - SPRING_DATASOURCE_USERNAME=compose-postgres
+#       - SPRING_DATASOURCE_PASSWORD=compose-postgres
+#       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+#   db:
+#     image: 'postgres:13.1-alpine'
+#     container_name: db
+#     environment:
+#       - POSTGRES_USER=compose-postgres
+#       - POSTGRES_PASSWORD=compose-postgres
+
+#   pgadmin-compose:
+#     image: dpage/pgadmin4:4.28
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: "postgres@email.com"
+#       PGADMIN_DEFAULT_PASSWORD: "postgres"
+#     ports:
+#       - "16543:80"
+#     depends_on:
+#       - db
+    # networks:
+    #   - postgres-compose-network
+
+
+
+#   postgres-compose:
+#     image: postgres:12
+#     container_name: postgres-compose
+#     environment:
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_USER: postgres
+#       POSTGRES_DB: desafioNetprecision
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - ./database/data:/var/lib/postgresql/data 
+#     networks:
+#       - postgres-compose-network
+      
+#   pgadmin-compose:
+#     image: dpage/pgadmin4:4.28
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: "postgres@email.com"
+#       PGADMIN_DEFAULT_PASSWORD: "postgres"
+#     ports:
+#       - "16543:80"
+#     depends_on:
+#       - postgres-compose
+#     networks:
+#       - postgres-compose-network
+      
+# networks: 
+#   postgres-compose-network:
+#     driver: bridge
